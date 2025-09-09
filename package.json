@@ -1,0 +1,17 @@
+{
+  "name": "bunagram",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "scripts": {
+  "start": "bun run backend/src/server/cli.ts",
+  "test": "bun test"
+}
+
+}
