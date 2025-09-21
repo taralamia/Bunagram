@@ -1,0 +1,30 @@
+{
+  "name": "bunagram",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@eslint/js": "^9.36.0",
+    "@types/bun": "latest",
+    "@typescript-eslint/eslint-plugin": "^8.44.0",
+    "@typescript-eslint/parser": "^8.44.0",
+    "eslint": "^9.36.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-security": "^3.0.1",
+    "prettier": "^3.6.2",
+    "typescript-eslint": "^8.44.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.9.2"
+  },
+  "scripts": {
+    "start": "bun run backend/src/server/cli.ts",
+    "test": "bun test",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  }
+}
