@@ -15,7 +15,7 @@ export function wordSignature(w: string): string {
   for (const ch of w) {
     const idx = ch.charCodeAt(0) - 97;
     if (idx >= 0 && idx < 26) {
-        counts[idx] = (counts[idx] ?? 0) + 1;
+      counts[idx] = (counts[idx] ?? 0) + 1;
     }
   }
   return counts.map(n => `#${n}`).join("");
@@ -33,10 +33,10 @@ export function groupBySignature(words: string[]): Map<string, string[]> {
 export type NonEmptyArray<T> = [T, ...T[]];
 
 export function randomChoice<T>(arr: NonEmptyArray<T>): T {
-  const i = (Math.random() * arr.length) | 0; 
-  const v = arr[i];                          
+  const i = (Math.random() * arr.length) | 0;
+  const v = arr[i];
   if (v === undefined) {
     throw new Error("randomChoice: unreachable index");
   }
-  return v;                                 
+  return v;
 }
