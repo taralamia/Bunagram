@@ -3,12 +3,21 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import {
   loadDictionary,
-  groupBySignature,
-  wordSignature,
+  groupBySignature
 } from "../lib/utils.ts";
-import { pickBaseWord, isAnagramOf } from "../lib/game.ts";
+import { isAnagramOf } from "../lib/game.ts";
+import { randomChoice, type NonEmptyArray } from "../lib/utils.ts";
+
 function ask(rl: readline.Interface, q: string) {
   return new Promise<string>(res => rl.question(q, res));
+}
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]] as [T, T];
+  }
+  return shuffled;
 }
 async function main() {
   const __filename = fileURLToPath(import.meta.url);
@@ -28,33 +37,46 @@ async function main() {
       /* ignore */
     }
   };
-
   process.on("SIGINT", () => {
     console.log("\nBye!");
     closeRL();
     process.exit(0);
   });
+
   const usedSigs = new Set<string>();
-
+  const allSigs = Array.from(groups.keys()).filter(sig => {
+    const groupWords = groups.get(sig);
+    return groupWords && groupWords.length >= 2;
+  });
   function pickNoRepeat(g: Map<string, string[]>) {
-    const playableSigs = Array.from(g.entries())
-      .filter(([, words]) => (words?.length ?? 0) >= 2)
-      .map(([sig]) => sig);
-
-    if (playableSigs.length === 0) {
+    if (allSigs.length === 0) {
       throw new Error("No playable groups. Add more words.");
     }
-    if (usedSigs.size >= playableSigs.length) {
+    if (usedSigs.size >= allSigs.length) {
       usedSigs.clear();
     }
-    while (true) {
-      const { base, anagrams } = pickBaseWord(g);
-      const sig = wordSignature(base);
-      if (!usedSigs.has(sig)) {
-        usedSigs.add(sig);
-        return { base, anagrams, sig };
-      }
+    const availableSigs = allSigs.filter(sig => !usedSigs.has(sig));
+
+    if (availableSigs.length === 0) {
+      throw new Error("No available signatures found.");
     }
+
+    const randomSig = randomChoice(availableSigs as NonEmptyArray<string>);
+    usedSigs.add(randomSig);
+
+    const anagrams = groups.get(randomSig) || [];
+    const shuffledAnagrams = shuffleArray(anagrams);
+
+    const base = shuffledAnagrams[0];
+    if (!base) {
+      throw new Error("No valid base word found.");
+    }
+
+    return {
+      base,
+      anagrams: shuffledAnagrams,
+      sig: randomSig,
+    };
   }
 
   console.log("🎲 Welcome to Bunagram!");
@@ -72,8 +94,9 @@ async function main() {
         score += 1;
         console.log("✅ Correct! You earn 1 point.");
       } else {
+        // Find an alternative anagram that's not the base word
         const alt = anagrams.find(w => w !== base);
-        console.log(`❌ Wrong! Example valid anagram: ${alt ?? "(none)"}`);
+        console.log(`❌ Wrong! Example valid anagram: ${alt || "(none)"}`);
       }
 
       console.log(`Score: ${score}`);
@@ -85,7 +108,6 @@ async function main() {
     closeRL();
   }
 }
-
 main().catch(err => {
   console.error(err);
   process.exit(1);

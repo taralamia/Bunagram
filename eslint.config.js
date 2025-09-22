@@ -2,11 +2,11 @@ import js from "@eslint/js";
 import tseslint from "typescript-eslint";
 import importPlugin from "eslint-plugin-import";
 import securityPlugin from "eslint-plugin-security";
-import prettier from 'eslint-plugin-prettier';
+import prettier from "eslint-plugin-prettier";
 
 export default tseslint.config(
   {
-    ignores: ["dist", "node_modules", "build", "coverage",".prettierrc.js"],
+    ignores: ["dist", "node_modules", "build", "coverage", ".prettierrc.js"],
   },
   {
     files: ["**/*.{js,ts,jsx,tsx}"],
@@ -14,10 +14,6 @@ export default tseslint.config(
       ecmaVersion: "latest",
       sourceType: "module",
       parser: tseslint.parser,
-      parserOptions: {
-        project: "./tsconfig.json",
-        tsconfigRootDir: import.meta.dirname,
-      },
     },
     plugins: {
       "@typescript-eslint": tseslint.plugin,
@@ -31,11 +27,11 @@ export default tseslint.config(
       "no-unused-vars": "off",
       "no-undef": "off",
       "prefer-const": "error",
-      "no-console": ["warn", { allow: ["warn", "error"] }],
+      "no-console": ["warn"],
       "@typescript-eslint/no-unused-vars": [
         "warn",
         { argsIgnorePattern: "^_" },
       ],
     },
-  },
+  }
 );

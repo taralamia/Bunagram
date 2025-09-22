@@ -31,7 +31,6 @@ export function groupBySignature(words: string[]): Map<string, string[]> {
   return map;
 }
 export type NonEmptyArray<T> = [T, ...T[]];
-
 export function randomChoice<T>(arr: NonEmptyArray<T>): T {
   const i = (Math.random() * arr.length) | 0;
   const v = arr[i];
