@@ -1,3 +1,36 @@
 @tailwind base;
 @tailwind components;   
 @tailwind utilities;
+@layer components {
+  .card-surface{
+     @apply text-gray-100 rounded-[34px] p-10 space-y-6;
+    background-color: #1b1026;
+    box-shadow: 0 20px 40px rgba(13,10,20,0.55);
+  }
+  .card-title {
+    @apply text-lg text-gray-300 font-mono text-center font-normal;
+  }
+  .btn-row {
+    @apply flex justify-center gap-3;
+  }
+   .diff-btn {
+    @apply px-6 py-3 rounded-lg text-sm font-semibold transition focus:outline-none focus:ring-4 focus:ring-offset-2;
+    color: #1b1026; 
+  }
+  .diff-btn--easy {
+    @apply bg-indigo-100 hover:bg-indigo-200;
+    --tw-ring-color: rgba(99,102,241,0.45); 
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 transparent), var(--tw-ring-shadow, 0 0 transparent);
+  }
+  .diff-btn--medium {
+    @apply bg-amber-100 hover:bg-amber-200;
+    --tw-ring-color: rgba(245,158,11,0.35); 
+  }
+  .diff-btn--hard {
+    @apply bg-red-100 hover:bg-red-200;
+    --tw-ring-color: rgba(239,68,68,0.35); 
+  }
+}
+:root {
+  --tw-ring-color: rgba(99,102,241,0.45);
+}
