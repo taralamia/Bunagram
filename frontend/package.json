@@ -1,6 +1,16 @@
 {
-  "dependencies": {},
-  "devDependencies": {
-    "tailwindcss": "^3.4.0"
-  }
+   "scripts": {
+      "build:css": "tailwindcss -i ./src/index.css -o ./dist/index.css -w",
+      "build:ts:watch": "bun build ./src/main.ts --outdir ./dist --target browser --format esm --watch",
+      "dev": "concurrently \"bun run build:css\" \"bun run build:ts:watch\" \"live-server --port=3000 --wait=100 ./\""
+   },
+   "dependencies": {},
+   "devDependencies": {
+      "autoprefixer": "^10.4.21",
+      "concurrently": "^9.2.1",
+      "postcss": "^8.5.6",
+      "tailwindcss": "^3.4.0",
+      "tailwindcss-animate": "^1.0.7",
+      "typescript": "^5.9.2"
+   }
 }
