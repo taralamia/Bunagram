@@ -32,4 +32,6 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 # Finder (MacOS) folder config
 .DS_Store
-backend/src/server/words.txt
+backend/src/lib/easy_words.txt
+backend/src/lib/hard_words.txt
+backend/src/lib/medium_words.txt

@@ -8,11 +8,7 @@ export type AnagramGame = {
   groups: Map<string, string[]>;
 };
 export function createAnagramGame(dictPath?: string): AnagramGame {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = dirname(__filename);
-  const defaultPath = resolve(__dirname, "../lib/words_easy.txt"); 
-  const pathToUse = dictPath ?? defaultPath;
-  const words = loadDictionary(pathToUse);
+  const words = loadDictionary(dictPath!);
   const dict = new Set(words);
   const groups = groupBySignature(words);
   return { dict, groups };
@@ -22,4 +18,26 @@ export function pickBase(game: AnagramGame): Candidate {
 }
 export function checkAnagram(base: string, guess: string, game: AnagramGame): boolean {
   return isAnagramOf(base, guess, game.dict);
+}
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const easyPath = resolve(__dirname, "../lib/words_easy.txt");
+const mediumPath = resolve(__dirname, "../lib/words_medium.txt");
+const hardPath = resolve(__dirname, "../lib/words_hard.txt");
+
+// preload at startup
+export const games: Record<"easy" | "medium" | "hard", AnagramGame> = {
+  easy: createAnagramGame(easyPath),
+  medium: createAnagramGame(mediumPath),
+  hard: createAnagramGame(hardPath),
+};
+export function getGame(difficulty?: string): AnagramGame {
+  switch ((difficulty ?? "easy").toLowerCase()) {
+    case "medium":
+      return games.medium;
+    case "hard":
+      return games.hard;
+    default:
+      return games.easy;
+  }
 }
