@@ -16,7 +16,12 @@ export function getBaseHandler(req: Request): Response {
     const difficulty = url.searchParams.get("difficulty") ?? "easy";
     const game = getGame(difficulty);
     const candidate = pickBase(game);
-    return jsonResponse({ success: true, candidate }, 200);
+    return jsonResponse({
+  success: true,
+  candidate: {
+    base: candidate.base,
+  }
+}, 200);
   } catch (err) {
     console.error("[getBaseHandler] error:", err);
     return jsonResponse({ success: false, error: "Failed to pick base word" }, 500);
