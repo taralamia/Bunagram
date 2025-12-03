@@ -2,7 +2,7 @@
   "scripts": {
     "build:css": "tailwindcss -i ./src/index.css -o ./dist/index.css",
     "build:ts": "bun build ./src/main.ts --outdir ./dist --target browser --format esm",
-    "build": "bun run build:ts && bun run build:css"
+    "build": "bun run build:ts && bun run build:css && cp index.html dist/index.html"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",

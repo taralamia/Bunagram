@@ -6,28 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bunagram</title>
     
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap" rel="stylesheet">
 
-    <!-- Tailwind output (ensure tailwind writes to ./dist/index.css) -->
-    <link rel="stylesheet" href="/dist/index.css" />
+    <!-- Correct path: index.html and index.css live in same folder after deployment -->
+    <link rel="stylesheet" href="index.css" />
   </head>
+
   <body class="h-screen bg-gradient-to-b from-pink-100 via-purple-100 to-indigo-100">
-    <!--header -->
-<header class="sticky top-8 z-10 backdrop-filter backdrop-blur bg-opacity-30 border-b border-gray-200 flex h-12 md:h-10 items-center justify-center px-4 text-2xl md:text-4xl font-sans sm:px-6 lg:px-8 rounded-lg mx-4">
-  <span class="transition-transform duration-300 hover:scale-110 cursor-pointer bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent font-nunito font-bold py-1">
-    Bunagram
-  </span>
-</header>
-   <main class="h-[calc(100vh-4rem)] flex items-center justify-center">
-    <div id="app" class="max-w-sm mx-auto">
-      <!-- Your app content will be injected here -->
-    </div>
-  </main>
-</body>
-    <!-- optional confetti runtime -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js" defer></script>  
 
-    <!-- compiled TypeScript entry (tsc -> dist/src/main.js) -->
-    <script type="module" src="dist/main.js"></script>
+    <header class="sticky top-8 z-10 backdrop-filter backdrop-blur bg-opacity-30 border-b border-gray-200 flex h-12 md:h-10 items-center justify-center px-4 text-2xl md:text-4xl font-sans sm:px-6 lg:px-8 rounded-lg mx-4">
+      <span class="transition-transform duration-300 hover:scale-110 cursor-pointer bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent font-nunito font-bold py-1">
+        Bunagram
+      </span>
+    </header>
 
+    <main class="h-[calc(100vh-4rem)] flex items-center justify-center">
+      <div id="app" class="max-w-sm mx-auto"></div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js" defer></script>
+
+    <!-- Correct path: main.js lives in same folder as index.html -->
+    <script type="module" src="main.js"></script>
+
+  </body>
 </html>
