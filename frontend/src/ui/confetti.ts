@@ -1,12 +1,46 @@
-declare const confetti: ((opts?: { particleCount?: number; spread?: number; origin?: { y?: number } }) => void) | undefined;
+declare const confetti: ((
+  opts?: {
+    particleCount?: number;
+    spread?: number;
+    startVelocity?: number;
+    ticks?: number;
+    origin?: { x?: number; y?: number };
+    zIndex?: number;
+  }
+) => void) | undefined;
+
 export function celebrate(): void {
   try {
-    if (typeof confetti === "function") {
-      confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
-    } else {
-      document.body.animate([{ filter: "brightness(1)" }, { filter: "brightness(1.3)" }, { filter: "brightness(1)" }], { duration: 500 });
+    if (typeof confetti !== "function") {
+      // Fallback if CDN failed
+      document.body.animate(
+        [{ filter: "brightness(1)" }, { filter: "brightness(1.4)" }, { filter: "brightness(1)" }],
+        { duration: 600 }
+      );
+      return;
     }
+
+    const duration = 4 * 1000;
+    const end = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
+    const frame = () => {
+      const timeLeft = end - Date.now();
+      if (timeLeft <= 0) return;
+
+      const particleCount = Math.round(50 * (timeLeft / duration));
+
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: Math.random(), y: Math.random() - 0.2 },
+      });
+
+      requestAnimationFrame(frame);
+    };
+
+    frame();
   } catch {
-    // swallow silent errors - confetti should be non-critical
+    // silent fallback
   }
 }

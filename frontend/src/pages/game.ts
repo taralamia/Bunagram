@@ -2,7 +2,6 @@ import { pick, check } from "../utils/api";
 import { showToast } from "../ui/toast";
 import { celebrate } from "../ui/confetti";
 import type { PickResult, CheckResult, Difficulty } from "../types";
-import { scrambleWord } from "../utils/string";
 
 function getDifficultyFromHash(): { difficulty: Difficulty } {
   const [, query] = location.hash.split("?");
@@ -95,59 +94,55 @@ export async function showGame(root: HTMLElement): Promise<void> {
   badge.className = `text-xl font-semibold ${difficultyColorClass}`;
   badge.textContent = difficulty;
 
-  let currentBase = "";  // We'll store just the base string here
+  let current: PickResult | null = null; 
   let score = 0;
-
   async function loadNext(): Promise<void> {
-    try {
-      const response: PickResult = await pick(difficulty);
-      const baseWord = response.candidate.base;
-
-      currentBase = baseWord;
-      scrambled.textContent = scrambleWord(baseWord).toUpperCase();
-
-      guess.value = "";
-      guess.focus();
-    } catch (err) {
-      showToast("Failed to load word: " + String(err), { type: "error" });
-    }
+  try {
+    current = await pick(difficulty);
+    scrambled.textContent = current.scrambled.toUpperCase();
+    guess.value = "";
+    guess.focus();
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    showToast("Failed to load word: " + msg, { type: "error" });
   }
+}
 
-  async function handleCheck(): Promise<void> {
-    if (!currentBase) return;
-    const playerGuess = guess.value.trim();
-    if (!playerGuess) {
-      showToast("Type a guess first", { type: "info" });
-      return;
-    }
-
-    try {
-      const res: CheckResult = await check(currentBase, playerGuess, difficulty);
-
-      if (res.isCorrect) {
-        score++;
-        scoreContainer.textContent = `Score: ${score}`;
-        celebrate();
-        showToast("Correct! Play again?", {
-          type: "success",
-          actions: [
-            { label: "Yes", onClick: loadNext },
-            { label: "Stop", onClick: () => location.hash = "#/" }
-          ]
-        });
-      } else {
-        showToast("Wrong! Try again", {
-          type: "error",
-          actions: [
-            { label: "Next", onClick: loadNext },
-            { label: "Stop", onClick: () => location.hash = "#/" }
-          ]
-        });
-      }
-    } catch (err) {
-      showToast("Network error", { type: "error" });
-    }
+ async function handleCheck(): Promise<void> {
+  if (!current) return;
+  const playerGuess = guess.value.trim();
+  if (!playerGuess) {
+    showToast("Type a guess first", { type: "info" });
+    return;
   }
+  try {
+    const res: CheckResult = await check(current.base, playerGuess, difficulty);  // Uses flat current.base
+
+    if (res.ok) {
+      score++;
+      scoreContainer.textContent = `Score: ${score}`;
+      celebrate();
+      showToast("Correct! Play again?", {
+        type: "success",
+        actions: [
+          { label: "Yes", onClick: async () => { await loadNext(); } },
+          { label: "Stop", onClick: () => { location.hash = "#/"; } }
+        ]
+      });
+    } else {
+      showToast(`Wrong! Example ${res.example ?? "-"}`, {
+        type: "error",
+        actions: [
+          { label: "Try next", onClick: async () => await loadNext() },
+          { label: "Stop", onClick: () => { location.hash = "#/"; } }
+        ]
+      });
+    }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    showToast("Network error: " + msg, { type: "error" });
+  }
+}
 
   checkButton.onclick = () => void handleCheck();
   skipButton.onclick = () => {

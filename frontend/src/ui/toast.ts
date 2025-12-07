@@ -90,9 +90,19 @@ export function showToast(message: string, opts: ToastOptions = {}) {
       btn.type = "button";
       btn.className = "px-3 py-1 rounded bg-white/10 text-white text-xs font-medium hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 transition";
       btn.textContent = action.label;
-      btn.addEventListener("click", (ev) => {
-        try { action.onClick(ev); } finally { remove(); }
-      });
+      btn.addEventListener("click", async(ev) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        stopTimer();
+        try {
+        await Promise.resolve(action.onClick(ev));
+      } catch (err) {
+        //console.error("Toast action failed:", err);
+      } finally {
+        remove(); 
+      }
+    });
+
       actionsWrap.appendChild(btn);
     });
     content.appendChild(actionsWrap);
@@ -112,7 +122,7 @@ export function showToast(message: string, opts: ToastOptions = {}) {
   card.appendChild(closeBtn);
 
   root.appendChild(card);
-  const duration = opts.duration ?? 1500;
+  const duration = opts.duration ?? 4000;
   let timeoutId: number | null = null;
 
   const startTimer = () => {

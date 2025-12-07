@@ -1,11 +1,13 @@
 export type Difficulty = "easy" | "medium" | "hard";
 export type PickResult = {
-  success: true;
-  candidate: {
-    base: string;
-  };
+  base: string;
+  scrambled: string;
+  example: string;
+  difficulty: Difficulty;
 };
+
 export type CheckResult = {
-  success: true;
-  isCorrect: boolean;
+  ok: boolean;
+  example?: string | null;
+  reason?: string;
 };
