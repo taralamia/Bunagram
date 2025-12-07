@@ -2,6 +2,8 @@ import { pick, check } from "../utils/api";
 import { showToast } from "../ui/toast";
 import { celebrate } from "../ui/confetti";
 import type { PickResult, CheckResult, Difficulty } from "../types";
+import { scrambleWord } from "../utils/string";
+
 function getDifficultyFromHash(): { difficulty: Difficulty } {
   const [, query] = location.hash.split("?");
   const params = new URLSearchParams(query);
@@ -11,30 +13,23 @@ function getDifficultyFromHash(): { difficulty: Difficulty } {
   }
   return { difficulty: "easy" };
 }
+
 function getDifficultyColor(difficulty: Difficulty): string {
-  switch (difficulty) {
-    case "medium":
-      return "text-black";
-    case "hard":
-      return "text-white";
-    default:
-      return "text-white";
-  }
+  return difficulty === "medium" ? "text-black" : "text-white";
 }
+
 function getDifficultyButtonClass(difficulty: Difficulty): string {
-  const baseClasses =
-    "px-6 py-3 rounded-lg text-sm font-semibold transition focus:outline-none focus:ring-4";
+  const base = "px-6 py-3 rounded-lg text-sm font-semibold transition focus:outline-none focus:ring-4";
   switch (difficulty) {
     case "easy":
-      return `${baseClasses} bg-indigo-100 hover:bg-indigo-200 text-gray-900 focus:ring-indigo-400`;
+      return `${base} bg-indigo-100 hover:bg-indigo-200 text-gray-900 focus:ring-indigo-400`;
     case "medium":
-      return `${baseClasses} bg-amber-100 hover:bg-amber-200 text-gray-900 focus:ring-amber-400`;
+      return `${base} bg-amber-100 hover:bg-amber-200 text-gray-900 focus:ring-amber-400`;
     case "hard":
-      return `${baseClasses} bg-red-100 hover:bg-red-200 text-gray-900 focus:ring-red-400`;
-    default:
-      return `${baseClasses} bg-indigo-100 hover:bg-indigo-200 text-gray-900 focus:ring-indigo-400`;
+      return `${base} bg-red-100 hover:bg-red-200 text-gray-900 focus:ring-red-400`;
   }
 }
+
 export async function showGame(root: HTMLElement): Promise<void> {
   const { difficulty } = getDifficultyFromHash();
   const difficultyColorClass = getDifficultyColor(difficulty);
@@ -89,81 +84,77 @@ export async function showGame(root: HTMLElement): Promise<void> {
       </div>
     </div>
   `;
-  const scrambledEl = root.querySelector<HTMLDivElement>("#scrambled");
-  const scoreEl = root.querySelector<HTMLDivElement>("#score");
-  const guessInput = root.querySelector<HTMLInputElement>("#guess");
-  const checkBtn = root.querySelector<HTMLButtonElement>("#checkBtn");
-  const skipBtn = root.querySelector<HTMLButtonElement>("#skipBtn");
-  const diffBadge = root.querySelector<HTMLElement>("#diff");
-  if (!scrambledEl || !scoreEl || !guessInput || !checkBtn || !skipBtn || !diffBadge) {
-    throw new Error("Missing required DOM elements in showGame()");
-  }
-  const scrambled = scrambledEl as HTMLDivElement;
-  const scoreContainer = scoreEl as HTMLDivElement;
-  const guess = guessInput as HTMLInputElement;
-  const checkButton = checkBtn as HTMLButtonElement;
-  const skipButton = skipBtn as HTMLButtonElement;
-  const badge = diffBadge as HTMLElement;
-  badge.className = `text-xl font-semibold ${getDifficultyColor(difficulty)}`;
+
+  const scrambled = root.querySelector<HTMLDivElement>("#scrambled")!;
+  const scoreContainer = root.querySelector<HTMLDivElement>("#score")!;
+  const guess = root.querySelector<HTMLInputElement>("#guess")!;
+  const checkButton = root.querySelector<HTMLButtonElement>("#checkBtn")!;
+  const skipButton = root.querySelector<HTMLButtonElement>("#skipBtn")!;
+  const badge = root.querySelector<HTMLElement>("#diff")!;
+
+  badge.className = `text-xl font-semibold ${difficultyColorClass}`;
   badge.textContent = difficulty;
-  let current: PickResult | null = null;
+
+  let currentBase = "";  // We'll store just the base string here
   let score = 0;
+
   async function loadNext(): Promise<void> {
     try {
-      current = await pick(difficulty);
-      scrambled.textContent = current.scrambled;
+      const response: PickResult = await pick(difficulty);
+      const baseWord = response.candidate.base;
+
+      currentBase = baseWord;
+      scrambled.textContent = scrambleWord(baseWord).toUpperCase();
+
       guess.value = "";
       guess.focus();
     } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
-      showToast("Failed to load word: " + msg, { type: "error" });
+      showToast("Failed to load word: " + String(err), { type: "error" });
     }
   }
+
   async function handleCheck(): Promise<void> {
-    if (!current) return;
+    if (!currentBase) return;
     const playerGuess = guess.value.trim();
     if (!playerGuess) {
       showToast("Type a guess first", { type: "info" });
       return;
     }
+
     try {
-      const res: CheckResult = await check(current.base, playerGuess, difficulty);
-      if (res.ok) {
+      const res: CheckResult = await check(currentBase, playerGuess, difficulty);
+
+      if (res.isCorrect) {
         score++;
         scoreContainer.textContent = `Score: ${score}`;
         celebrate();
         showToast("Correct! Play again?", {
           type: "success",
           actions: [
-            { label: "Yes", onClick: async () => { await loadNext(); } },
-            { label: "Stop", onClick: () => { location.hash = "#/"; } }
+            { label: "Yes", onClick: loadNext },
+            { label: "Stop", onClick: () => location.hash = "#/" }
           ]
         });
       } else {
-        showToast(`Wrong! Example ${res.example ?? "-"}`, {
+        showToast("Wrong! Try again", {
           type: "error",
           actions: [
-            { label: "Try next", onClick: async () => await loadNext() },
-            { label: "Stop", onClick: () => { location.hash = "#/"; } }
+            { label: "Next", onClick: loadNext },
+            { label: "Stop", onClick: () => location.hash = "#/" }
           ]
         });
       }
     } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
-      showToast("Network error: " + msg, { type: "error" });
+      showToast("Network error", { type: "error" });
     }
   }
-  checkButton.addEventListener("click", async () => {
-    await handleCheck();
-  });
-  skipButton.addEventListener("click", async () => {
-    showToast("Skipped. Showing next...", { type: "info" });
-    await loadNext();
-  });
-  guess.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      void handleCheck();
-    }
-  });
+
+  checkButton.onclick = () => void handleCheck();
+  skipButton.onclick = () => {
+    showToast("Skipped", { type: "info" });
+    loadNext();
+  };
+  guess.onkeydown = (e) => e.key === "Enter" && void handleCheck();
+
   await loadNext();
 }

@@ -29,5 +29,5 @@ export function isAnagramOf(
   if (!/^[a-z]+$/.test(g)) return false;
   if (g.length !== base.length) return false;
   if (!dict.has(g)) return false;
-  return wordSignature(g) === wordSignature(base) && g !== base;
+  return wordSignature(g) === wordSignature(base) ;
 }

@@ -1,4 +1,5 @@
 import * as readline from "node:readline";
+import { games } from "../service/anagramService";
 import { createAnagramGame, checkAnagram, type AnagramGame } from "../service/anagramService";
 function ask(rl: readline.Interface, q: string): Promise<string> {
   return new Promise((resolve) => rl.question(q, resolve));
@@ -60,7 +61,7 @@ function createPicker(game: AnagramGame) {
   };
 }
 async function main() {
-  const game = createAnagramGame();
+  const game = games.easy;
   const pick = createPicker(game);
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 

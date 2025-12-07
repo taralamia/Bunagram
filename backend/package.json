@@ -10,7 +10,8 @@
     "typescript": "^5.9.2"
   },
   "scripts": {
-    "start": "bun run src/cli.ts",
+    "start": "bun run src/cli.ts", 
+    "cli": "bun run src/anagramCli/cli.ts",      
     "test": "bun test",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
