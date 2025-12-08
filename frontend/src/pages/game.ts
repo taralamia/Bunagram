@@ -101,7 +101,7 @@ export async function showGame(root: HTMLElement): Promise<void> {
     current = await pick(difficulty);
     scrambled.textContent = current.scrambled.toUpperCase();
     guess.value = "";
-    guess.focus();
+    setTimeout(() => guess.focus(), 0);
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     showToast("Failed to load word: " + msg, { type: "error" });

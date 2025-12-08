@@ -65,11 +65,18 @@ export async function pick(difficulty: Difficulty = "easy"): Promise<PickResult>
   }
 
   const candidate = body.candidate;
-  const base = String(candidate.base ?? "");
+  const base = candidate.base;
+  if (!base || typeof base !== "string" || base.length < 2) {
+  throw new Error("Invalid word received from server");
+  }
+
   const anagrams = Array.isArray(candidate.anagrams) ? candidate.anagrams.map(String) : [];
   const exampleFromServer = typeof candidate.example === "string" ? candidate.example : null;
   const example = exampleFromServer ?? (anagrams.length ? anagrams[0] : "");
   const scrambled = shuffleString(base);
+  if (!scrambled || scrambled === base) {
+  throw new Error("Failed to scramble word");
+}
 
   return {
     base,
