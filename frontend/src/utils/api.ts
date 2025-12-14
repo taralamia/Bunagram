@@ -37,11 +37,6 @@ function shuffleString(s: string): string {
   }
   return a.join("");
 }
-
-export function validateAlphaOnly(s: string): boolean {
-  return /^[a-zA-Z]+$/.test(s);
-}
-
 type PickResponseShape = {
   candidate?: {
     base?: string | null;
@@ -87,12 +82,17 @@ export async function pick(difficulty: Difficulty = "easy"): Promise<PickResult>
 }
 
 export async function check(base: string, guess: string, difficulty: Difficulty = "easy"): Promise<CheckResult> {
-  if (!validateAlphaOnly(guess)) {
-    return { ok: false, example: null, reason: "invalid_input" };
-  }
+  const normalizedGuess = guess
+  .trim()
+  .toLowerCase();
+
+  if (!/^[a-z]+$/.test(normalizedGuess)) {
+  return { ok: false, example: null, reason: "invalid_input" };
+}
+
 
   const url = `${API_ORIGIN}/api/check`;
-  const payload = { base, guess, difficulty };
+  const payload = { base, guess:normalizedGuess, difficulty };
 
   const res = await fetchJson<CheckResponseShape>(url, {
     method: "POST",

@@ -99,7 +99,7 @@ export async function showGame(root: HTMLElement): Promise<void> {
   async function loadNext(): Promise<void> {
   try {
     current = await pick(difficulty);
-    scrambled.textContent = current.scrambled.toUpperCase();
+    scrambled.textContent = current.scrambled;
     guess.value = "";
     setTimeout(() => guess.focus(), 0);
   } catch (err) {
@@ -125,7 +125,10 @@ export async function showGame(root: HTMLElement): Promise<void> {
       showToast("Correct! Play again?", {
         type: "success",
         actions: [
-          { label: "Yes", onClick: async () => { await loadNext(); } },
+          { label: "Yes", onClick: async () => { requestAnimationFrame(() => {
+  void loadNext();
+});
+ } },
           { label: "Stop", onClick: () => { location.hash = "#/"; } }
         ]
       });
