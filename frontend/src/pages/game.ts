@@ -1,5 +1,5 @@
 import { pick, check } from "../utils/api";
-import { showToast } from "../ui/toast";
+//import { showToast } from "../ui/toast";
 import { celebrate } from "../ui/confetti";
 import type { PickResult, CheckResult, Difficulty } from "../types";
 
@@ -104,7 +104,7 @@ export async function showGame(root: HTMLElement): Promise<void> {
     setTimeout(() => guess.focus(), 0);
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
-    showToast("Failed to load word: " + msg, { type: "error" });
+   // showToast("Failed to load word: " + msg, { type: "error" });
   }
 }
 
@@ -112,7 +112,7 @@ export async function showGame(root: HTMLElement): Promise<void> {
   if (!current) return;
   const playerGuess = guess.value.trim();
   if (!playerGuess) {
-    showToast("Type a guess first", { type: "info" });
+    //showToast("Type a guess first", { type: "info" });
     return;
   }
   try {
@@ -122,34 +122,34 @@ export async function showGame(root: HTMLElement): Promise<void> {
       score++;
       scoreContainer.textContent = `Score: ${score}`;
       celebrate();
-      showToast("Correct! Play again?", {
-        type: "success",
-        actions: [
-          { label: "Yes", onClick: async () => { requestAnimationFrame(() => {
-  void loadNext();
-});
- } },
-          { label: "Stop", onClick: () => { location.hash = "#/"; } }
-        ]
-      });
+      //showToast("Correct! Play again?", {
+        //type: "success",
+        //actions: [
+         // { label: "Yes", onClick: async () => { requestAnimationFrame(() => {
+  //void loadNext();
+//});
+ //} },
+        //  { label: "Stop", onClick: () => { location.hash = "#/"; } }
+        //]
+      //});
     } else {
-      showToast(`Wrong! Example ${res.example ?? "-"}`, {
+     /* showToast(`Wrong! Example ${res.example ?? "-"}`, {
         type: "error",
         actions: [
           { label: "Try next", onClick: async () => await loadNext() },
           { label: "Stop", onClick: () => { location.hash = "#/"; } }
         ]
-      });
+      });*/
     }
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
-    showToast("Network error: " + msg, { type: "error" });
+    //showToast("Network error: " + msg, { type: "error" });
   }
 }
 
   checkButton.onclick = () => void handleCheck();
   skipButton.onclick = () => {
-    showToast("Skipped", { type: "info" });
+    //showToast("Skipped", { type: "info" });
     loadNext();
   };
   guess.onkeydown = (e) => e.key === "Enter" && void handleCheck();
