@@ -1,6 +1,6 @@
 import { pick, check } from "../utils/api";
 import { showToast } from "../ui/toast";
-import { celebrate } from "../ui/confetti";
+//import { celebrate } from "../ui/confetti";
 import type { PickResult, CheckResult, Difficulty } from "../types";
 
 function getDifficultyFromHash(): { difficulty: Difficulty } {
@@ -120,7 +120,7 @@ export async function showGame(root: HTMLElement): Promise<void> {
     if (res.ok) {
       score++;
       scoreContainer.textContent = `Score: ${score}`;
-      celebrate();
+      //celebrate();
       showToast("Correct! Play again?", {
         type: "success",
         actions: [
