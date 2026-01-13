@@ -30,17 +30,17 @@ function ensureRoot(): HTMLDivElement {
   el.id = ROOT_ID;
   el.setAttribute("aria-live", "polite");
   Object.assign(el.style, {
-    position: "fixed",
-    left: "50%",
-    top: "50%",
-    transform: "translate(-50%, -50%)",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: "0.75rem",
-    zIndex: "10000",
-    pointerEvents: "none",
-  });
+  position: "fixed",
+  right: "1rem",
+  bottom: "1rem",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "flex-end",
+  gap: "0.75rem",
+  zIndex: "1000",
+  pointerEvents: "none",
+});
+
   document.body.appendChild(el);
   rootEl = el;
   return el;
@@ -58,6 +58,7 @@ export function showToast(message: string, opts: ToastOptions = {}) {
   const card = document.createElement("div");
   const icon = iconForType(opts.type);
   const variantBg = opts.variant === "soft" ? "bg-gray-900/60" : "bg-gray-900/80";
+  card.tabIndex = -1;
   card.className = `${BASE_CARD} ${variantBg} ${icon.bg}`;
   card.style.pointerEvents = "auto";
   const remove = () => {
@@ -89,6 +90,7 @@ export function showToast(message: string, opts: ToastOptions = {}) {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "px-3 py-1 rounded bg-white/10 text-white text-xs font-medium hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 transition";
+      btn.tabIndex = -1;
       btn.textContent = action.label;
       btn.addEventListener("click", async(ev) => {
         ev.preventDefault();
@@ -118,6 +120,7 @@ export function showToast(message: string, opts: ToastOptions = {}) {
   `;
   closeBtn.className = "ml-auto p-1 rounded-full hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30";
   closeBtn.setAttribute("aria-label", "Close");
+  closeBtn.tabIndex = -1;
   closeBtn.addEventListener("click", remove);
   card.appendChild(closeBtn);
 
