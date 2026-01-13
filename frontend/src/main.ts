@@ -5,12 +5,15 @@ const routes: Record<string, (root: HTMLElement) => void | Promise<void>> = {
   "#/": showLanding,
   "#/game": showGame
 };
+let currentRoute = "";
 function router(): void {
   const hash = location.hash || "#/";
   const root = document.getElementById("app");
   if (!root) throw new Error("Missing #app mount element");
 
   const [path] = hash.split("?");
+  if (path === currentRoute) return;
+  currentRoute = path;
   const routeFn = routes[path] ?? showLanding;
   void routeFn(root);
 }

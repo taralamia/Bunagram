@@ -1,6 +1,6 @@
 import { pick, check } from "../utils/api";
 import { showToast } from "../ui/toast";
-//import { celebrate } from "../ui/confetti";
+import { celebrate } from "../ui/confetti";
 import type { PickResult, CheckResult, Difficulty } from "../types";
 
 function getDifficultyFromHash(): { difficulty: Difficulty } {
@@ -34,7 +34,7 @@ export async function showGame(root: HTMLElement): Promise<void> {
   const difficultyColorClass = getDifficultyColor(difficulty);
 
   root.innerHTML = `
-    <div class="card-surface transform scale-95 mt-16" role="main" aria-label="Word Scramble Game">
+    <div class="card-surface mt-16" role="main" aria-label="Word Scramble Game">
       <div class="text-center space-y-8">
         <!-- Header -->
         <div class="space-y-3">
@@ -120,7 +120,7 @@ export async function showGame(root: HTMLElement): Promise<void> {
     if (res.ok) {
       score++;
       scoreContainer.textContent = `Score: ${score}`;
-      //celebrate();
+      celebrate();
       showToast("Correct! Play again?", {
         type: "success",
         actions: [
