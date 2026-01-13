@@ -19,7 +19,6 @@ export function celebrate(): void {
       );
       return;
     }
-
     const duration = 1200;
     const end = Date.now() + duration;
     const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
