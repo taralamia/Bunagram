@@ -10,6 +10,7 @@ export function showLanding(root: HTMLElement): void {
       </div>
     </div>
   `;
+
   const btns = Array.from(root.querySelectorAll<HTMLButtonElement>("button[data-diff]"));
   btns.forEach((btn) => {
     btn.addEventListener("click", () => {
