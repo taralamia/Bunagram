@@ -23,7 +23,6 @@ function getDifficultyButtonClass(difficulty: Difficulty): string {
     case "hard": return `${base} bg-red-100 hover:bg-red-200 text-gray-900 focus:ring-red-400`;
   }
 }
-
 export async function showGame(root: HTMLElement): Promise<void> {
   const { difficulty } = getDifficultyFromHash();
   const difficultyColorClass = getDifficultyColor(difficulty);
@@ -39,7 +38,9 @@ export async function showGame(root: HTMLElement): Promise<void> {
         </div>
 
         <div class="py-8 px-8 bg-gray-900/50 rounded-2xl border border-gray-700/50">
-          <div id="scrambled" class="text-5xl font-mono font-bold tracking-wider text-gray-100"></div>
+          <div id="scrambled" class="text-5xl font-mono font-bold tracking-wider text-gray-100">
+            Loading...
+          </div>
         </div>
 
         <div id="score" class="text-lg font-mono text-gray-300">Score: 0</div>
@@ -48,14 +49,15 @@ export async function showGame(root: HTMLElement): Promise<void> {
           <input 
             id="guess" 
             class="w-full px-6 py-4 rounded-2xl border border-gray-600 bg-gray-800/50 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-center font-medium text-lg" 
-            placeholder="Type your guess here..."
+            placeholder="Loading..."
             autocomplete="off"
             spellcheck="false"
+            disabled
           />
 
           <div class="btn-row pt-4">
-            <button id="checkBtn" class="${getDifficultyButtonClass(difficulty)}">Check Answer</button>
-            <button id="skipBtn" class="px-6 py-3 rounded-lg text-sm font-semibold bg-gray-600 hover:bg-gray-500 text-gray-100 transition focus:outline-none focus:ring-4 focus:ring-gray-400">Skip</button>
+            <button id="checkBtn" class="${getDifficultyButtonClass(difficulty)}" disabled>Check Answer</button>
+            <button id="skipBtn" class="px-6 py-3 rounded-lg text-sm font-semibold bg-gray-600 hover:bg-gray-500 text-gray-100 transition focus:outline-none focus:ring-4 focus:ring-gray-400" disabled>Skip</button>
           </div>
         </div>
 
@@ -65,15 +67,16 @@ export async function showGame(root: HTMLElement): Promise<void> {
       </div>
     </div>
   `;
+
   const scrambled = root.querySelector<HTMLDivElement>("#scrambled")!;
   const scoreContainer = root.querySelector<HTMLDivElement>("#score")!;
   const guess = root.querySelector<HTMLInputElement>("#guess")!;
   const checkButton = root.querySelector<HTMLButtonElement>("#checkBtn")!;
   const skipButton = root.querySelector<HTMLButtonElement>("#skipBtn")!;
   const badge = root.querySelector<HTMLElement>("#diff")!;
-
   badge.className = `text-xl font-semibold ${difficultyColorClass}`;
   badge.textContent = difficulty;
+
   let current: PickResult | null = null;
   let score = 0;
   async function loadNext(): Promise<void> {
@@ -81,12 +84,17 @@ export async function showGame(root: HTMLElement): Promise<void> {
       current = await pick(difficulty);
       scrambled.textContent = current.scrambled;
       guess.value = "";
+      guess.placeholder = "Type your guess here...";
+      guess.disabled = false;
+      checkButton.disabled = false;
+      skipButton.disabled = false;
       guess.focus();
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       showToast("Failed to load word: " + msg, { type: "error" });
     }
   }
+
   async function handleCheck(): Promise<void> {
     if (!current) return;
     const playerGuess = guess.value.trim();
@@ -103,23 +111,33 @@ export async function showGame(root: HTMLElement): Promise<void> {
         showToast("Correct! Play again?", {
           type: "success",
           actions: [
-            { label: "Yes", onClick: async () => void loadNext() },
+            { label: "Yes", onClick: async () => { await loadNext(); } },
             { label: "Stop", onClick: () => { location.hash = "#/"; } }
           ]
         });
-      } 
+      } else {
+        showToast(`Wrong! Example: ${res.example ?? "-"}`, {
+          type: "error",
+          actions: [
+            { label: "Try next", onClick: async () => await loadNext() },
+            { label: "Stop", onClick: () => { location.hash = "#/"; } }
+          ]
+        });
+      }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
+      showToast("Network error: " + msg, { type: "error" });
     }
   }
-  checkButton.onclick = () => void handleCheck();
-  skipButton.onclick = () => void loadNext();
+
+  checkButton.addEventListener("click", handleCheck);
+  skipButton.addEventListener("click", async () => {
+    showToast("Skipped. Showing next...", { type: "info" });
+    await loadNext();
+  });
   guess.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    handleCheck();
-  }
-});
-
-
-  await loadNext();
+    if (e.key === "Enter") void handleCheck();
+  });
+  void loadNext();
 }
+

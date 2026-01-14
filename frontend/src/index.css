@@ -33,4 +33,7 @@
 }
 :root {
   --tw-ring-color: rgba(99,102,241,0.45);
+} 
+#scrambled {
+  @apply h-24 flex items-center justify-center; 
 }
