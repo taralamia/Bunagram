@@ -114,7 +114,12 @@ export async function showGame(root: HTMLElement): Promise<void> {
   }
   checkButton.onclick = () => void handleCheck();
   skipButton.onclick = () => void loadNext();
-  guess.onkeydown = (e) => e.key === "Enter" && void handleCheck();
+  guess.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    handleCheck();
+  }
+});
+
 
   await loadNext();
 }
