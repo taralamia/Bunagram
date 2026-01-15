@@ -27,7 +27,7 @@ export async function showGame(root: HTMLElement): Promise<void> {
   const { difficulty } = getDifficultyFromHash();
   const difficultyColorClass = getDifficultyColor(difficulty);
   root.innerHTML = `
-  <div class="pt-24 flex justify-center">
+  <div class="flex justify-center">
     <div class="card-surface w-full max-w-lg" role="main" aria-label="Word Scramble Game">
 
       <div class="text-center space-y-8">
