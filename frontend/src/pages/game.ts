@@ -27,47 +27,78 @@ export async function showGame(root: HTMLElement): Promise<void> {
   const { difficulty } = getDifficultyFromHash();
   const difficultyColorClass = getDifficultyColor(difficulty);
   root.innerHTML = `
-    <div class="pt-16 flex justify-center">
-     <div class="card-surface" role="main" aria-label="Word Scramble Game">
+  <div class="pt-24 flex justify-center">
+    <div class="card-surface w-full max-w-lg" role="main" aria-label="Word Scramble Game">
+
       <div class="text-center space-y-8">
         <div class="space-y-3">
-          <h1 class="text-2xl font-mono text-gray-300 text-center font-normal">Unscramble the Word</h1>
+          <h1 class="text-2xl font-mono text-gray-300 font-normal">
+            Unscramble the Word
+          </h1>
+
           <div class="flex items-center justify-center gap-2">
             <span class="text-lg text-gray-400">Difficulty:</span>
-            <span id="diff" class="text-xl font-semibold ${difficultyColorClass}">${difficulty}</span>
-          </div>
-        </div>
-       </div>
-        <div class="py-8 px-8 bg-gray-900/50 rounded-2xl border border-gray-700/50">
-          <div id="scrambled" class="text-5xl font-mono font-bold tracking-wider text-gray-100">
-            Loading...
+            <span id="diff" class="text-xl font-semibold ${difficultyColorClass}">
+              ${difficulty}
+            </span>
           </div>
         </div>
 
-        <div id="score" class="text-lg font-mono text-gray-300">Score: 0</div>
+        <!-- SCRAMBLED WORD CONTAINER -->
+        <div class="py-6 px-6 bg-gray-900/50 rounded-2xl border border-gray-700/50">
+          <div
+            id="scrambled"
+            class="h-20 flex items-center justify-center
+                   text-4xl font-mono font-bold tracking-wider
+                   text-gray-100 select-none"
+            aria-busy="true"
+          ></div>
+        </div>
+
+        <div id="score" class="text-lg font-mono text-gray-300">
+          Score: 0
+        </div>
 
         <div class="space-y-6">
-          <input 
-            id="guess" 
-            class="w-full px-6 py-4 rounded-2xl border border-gray-600 bg-gray-800/50 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-center font-medium text-lg" 
-            placeholder="Loading..."
+          <input
+            id="guess"
+            class="w-full px-6 py-4 rounded-2xl border border-gray-600
+                   bg-gray-800/50 text-gray-100 placeholder-gray-400
+                   focus:outline-none focus:ring-2 focus:ring-indigo-500
+                   text-center font-medium text-lg"
+            placeholder="Type your guess here..."
             autocomplete="off"
             spellcheck="false"
-            disabled
           />
 
           <div class="btn-row pt-4">
-            <button id="checkBtn" class="${getDifficultyButtonClass(difficulty)}" disabled>Check Answer</button>
-            <button id="skipBtn" class="px-6 py-3 rounded-lg text-sm font-semibold bg-gray-600 hover:bg-gray-500 text-gray-100 transition focus:outline-none focus:ring-4 focus:ring-gray-400" disabled>Skip</button>
+            <button id="checkBtn" class="${getDifficultyButtonClass(difficulty)}">
+              Check Answer
+            </button>
+
+            <button
+              id="skipBtn"
+              class="px-6 py-3 rounded-lg text-sm font-semibold
+                     bg-gray-600 hover:bg-gray-500 text-gray-100
+                     transition focus:outline-none focus:ring-4
+                     focus:ring-gray-400"
+            >
+              Skip
+            </button>
           </div>
         </div>
 
         <div class="pt-6">
-          <a href="#/" class="text-lg text-indigo-300 hover:text-indigo-200 transition-colors font-mono">← Back to Menu</a>
+          <a href="#/" class="text-lg text-indigo-300 hover:text-indigo-200 font-mono">
+            ← Back to Menu
+          </a>
         </div>
+
       </div>
     </div>
-  `;
+  </div>
+`;
+
 
   const scrambled = root.querySelector<HTMLDivElement>("#scrambled")!;
   const scoreContainer = root.querySelector<HTMLDivElement>("#score")!;
