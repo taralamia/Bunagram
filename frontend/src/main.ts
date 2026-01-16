@@ -15,14 +15,17 @@ function setLayout(mode: "home" | "game") {
   if (mode === "game") {
     header.style.display = "none";
     document.body.style.overflow = "hidden";
-    main.classList.remove("pt-24");
+
+    main.classList.remove("pt-24", "items-start");
+    main.classList.add("items-center");
   } else {
     header.style.display = "";
     document.body.style.overflow = "";
-    main.classList.add("pt-24");
+
+    main.classList.remove("items-center");
+    main.classList.add("pt-24", "items-start");
   }
 }
-
 function router(): void {
   const hash = location.hash || "#/";
   const root = document.getElementById("app");
