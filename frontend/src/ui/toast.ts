@@ -11,12 +11,11 @@ let rootEl: HTMLDivElement | null = null;
 
 const BASE_CARD =
   "pointer-events-auto max-w-sm w-full mx-auto rounded-2xl backdrop-blur-md border border-white/10 " +
-  "shadow-xl flex items-center gap-4 p-4 " +
+  "shadow-xl flex items-center gap-4 p-4 items-stretch min-h-[4rem] " +
   "animate-in fade-in zoom-in duration-300";
 
 const ICON_BASE =
-  "flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg"; // <- text-lg for visual weight
-
+  "flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-2xl leading-none";
 
 const TEXT_BASE = "flex-1 text-sm font-medium text-gray-100 break-words";
 
