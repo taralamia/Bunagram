@@ -124,7 +124,6 @@ export async function showGame(root: HTMLElement): Promise<void> {
       showToast("Failed to load word: " + msg, { type: "error" });
     }
   }
-
   async function handleCheck(): Promise<void> {
     if (!current) return;
     const playerGuess = guess.value.trim();
@@ -135,17 +134,17 @@ export async function showGame(root: HTMLElement): Promise<void> {
     try {
       const res: CheckResult = await check(current.base, playerGuess, difficulty);
       if (res.ok) {
-        score++;
-        scoreContainer.textContent = `Score: ${score}`;
-        celebrate();
-        showToast("Correct! Play again?", {
-          type: "success",
-          actions: [
-            { label: "Yes", onClick: async () => { await loadNext(); } },
-            { label: "Stop", onClick: () => { location.hash = "#/"; } }
-          ]
-        });
-      } else {
+      score++;
+      scoreContainer.textContent = `Score: ${score}`;
+      celebrate();
+      showToast("Correct!", {
+      type: "success",
+      duration: 1200,
+      variant: "soft"
+     });
+      await loadNext();
+      }
+      else {
         showToast(`Wrong! Example: ${res.example ?? "-"}`, {
           type: "error",
           actions: [
@@ -159,7 +158,6 @@ export async function showGame(root: HTMLElement): Promise<void> {
       showToast("Network error: " + msg, { type: "error" });
     }
   }
-
   checkButton.addEventListener("click", handleCheck);
   skipButton.addEventListener("click", async () => {
     showToast("Skipped. Showing next...", { type: "info" });
