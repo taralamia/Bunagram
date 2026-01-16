@@ -74,7 +74,7 @@ export function showToast(message: string, opts: ToastOptions = {}) {
     }, 300);
   };
   const iconNode = document.createElement("div");
-  iconNode.className = ICON_BASE;
+  iconNode.className = `${ICON_BASE} ${icon.bg}`;
   iconNode.textContent = icon.text;
   card.appendChild(iconNode);
   const content = document.createElement("div");
