@@ -47,7 +47,7 @@ function ensureRoot(): HTMLDivElement {
 }
 function iconForType(type?: ToastOptions["type"]) {
   switch (type) {
-    case "success": return { bg: "bg-emerald-500/80", text: "Check" };
+    case "success": return { bg: "bg-emerald-500/80", text: "✓" };
     case "error":   return { bg: "bg-rose-500/80",    text: "!" };   // changed from "X"
     case "warn":    return { bg: "bg-amber-500/80",  text: "!" };
     default:        return { bg: "bg-indigo-500/80", text: "i" };

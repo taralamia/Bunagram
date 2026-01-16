@@ -139,7 +139,7 @@ export async function showGame(root: HTMLElement): Promise<void> {
       celebrate();
       showToast("Correct!", {
       type: "success",
-      duration: 9000,
+      duration: 1200,
      });
       await loadNext();
       }
