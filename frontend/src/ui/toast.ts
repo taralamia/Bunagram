@@ -59,7 +59,7 @@ export function showToast(message: string, opts: ToastOptions = {}) {
   const icon = iconForType(opts.type);
   const variantBg = opts.variant === "soft" ? "bg-gray-900/60" : "bg-gray-900/80";
   card.tabIndex = -1;
-  card.className = `${BASE_CARD} ${variantBg} ${icon.bg}`;
+  card.className = `${BASE_CARD} ${variantBg}`;
   card.style.pointerEvents = "auto";
   const remove = () => {
     if (timeoutId !== null) clearTimeout(timeoutId);
