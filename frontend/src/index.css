@@ -3,7 +3,7 @@
 @tailwind utilities;
 @layer components {
   .card-surface{
-     @apply text-gray-100 rounded-[34px] p-10 space-y-6;
+    @apply w-full max-w-sm text-gray-100 rounded-[34px] p-10 space-y-6;
     background-color: #1b1026;
     box-shadow: 0 20px 40px rgba(13,10,20,0.55);
     backdrop-filter: none;
