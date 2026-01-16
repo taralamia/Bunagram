@@ -15,7 +15,8 @@ const BASE_CARD =
   "animate-in fade-in zoom-in duration-300";
 
 const ICON_BASE =
-  "flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-white text-base font-bold";
+  "flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg"; // <- text-lg for visual weight
+
 
 const TEXT_BASE = "flex-1 text-sm font-medium text-gray-100 break-words";
 
