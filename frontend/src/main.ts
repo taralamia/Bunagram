@@ -6,6 +6,23 @@ const routes: Record<string, (root: HTMLElement) => void | Promise<void>> = {
   "#/game": showGame
 };
 let currentRoute = "";
+function setLayout(mode: "home" | "game") {
+  const header = document.getElementById("site-header");
+  const main = document.querySelector("main");
+
+  if (!header || !main) return;
+
+  if (mode === "game") {
+    header.style.display = "none";
+    document.body.style.overflow = "hidden";
+    main.classList.remove("pt-24");
+  } else {
+    header.style.display = "";
+    document.body.style.overflow = "";
+    main.classList.add("pt-24");
+  }
+}
+
 function router(): void {
   const hash = location.hash || "#/";
   const root = document.getElementById("app");
@@ -14,6 +31,11 @@ function router(): void {
   const [path] = hash.split("?");
   if (path === currentRoute) return;
   currentRoute = path;
+   if (path === "#/game") {
+    setLayout("game");
+  } else {
+    setLayout("home");
+  }
   const routeFn = routes[path] ?? showLanding;
   void routeFn(root);
 }
