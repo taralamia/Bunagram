@@ -80,7 +80,7 @@ function ensureRoot(): HTMLDivElement {
     bottom: "1rem",
     display: "flex",
     flexDirection: "column",
-    alignItems: "flex-end",
+    alignItems: "center",
     gap: "0.75rem",
     zIndex: "1000",
     pointerEvents: "none",
