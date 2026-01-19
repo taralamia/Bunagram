@@ -8,7 +8,7 @@ type ToastOptions = {
 const ROOT_ID = "bunagram-toast-root";
 let rootEl: HTMLDivElement | null = null;
 const BASE_CARD =
-  "pointer-events-auto max-w-sm w-full mx-auto rounded-2xl backdrop-blur-md " +
+  "pointer-events-auto max-w-sm w-full rounded-2xl backdrop-blur-md " +
   "border border-white/10 shadow-xl flex items-center gap-4 p-4 min-h-[4rem] " +
   "animate-in fade-in zoom-in duration-300";
 
@@ -78,6 +78,8 @@ function ensureRoot(): HTMLDivElement {
     position: "fixed",
     right: "1rem",
     bottom: "1rem",
+    width: "100%",          
+    maxWidth: "24rem", 
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
