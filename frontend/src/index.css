@@ -5,9 +5,14 @@
   .card-surface{
     @apply w-full max-w-sm text-gray-100 rounded-[34px] p-6 space-y-6;
     background-color: #1b1026;
-    box-shadow: 0 20px 40px rgba(13,10,20,0.55);
+    box-shadow: 0 10px 20px rgba(13,10,20,0.35);
     backdrop-filter: none;
   }
+  @media (min-width: 768px) {
+  .card-surface {
+    box-shadow: 0 20px 40px rgba(13,10,20,0.55);
+  }
+}
   .card-title {
     @apply text-lg text-gray-300 font-mono text-center font-normal;
   }
@@ -16,6 +21,7 @@
   }
    .diff-btn {
     @apply px-6 py-3 rounded-lg text-sm font-semibold transition focus:outline-none focus:ring-4 focus:ring-offset-2;
+    @apply active:scale-95;
     color: #1b1026; 
   }
   .diff-btn--easy {
@@ -36,5 +42,5 @@
   --tw-ring-color: rgba(99,102,241,0.45);
 } 
 #scrambled {
-  @apply h-24 flex items-center justify-center; 
+   @apply min-h-24 flex items-center justify-center;
 }
