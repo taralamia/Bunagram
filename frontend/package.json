@@ -1,10 +1,11 @@
 {
   "scripts": {
+     "build": "bun run build:ts && bun run build:css && cp index.html dist/index.html",
+
     "build:css": "tailwindcss -i ./src/index.css -o ./dist/index.css",
     "watch:css": "tailwindcss -i ./src/index.css -o ./dist/index.css --watch",
 
     "build:ts": "bun build ./src/main.ts --outdir ./dist --target browser --format esm",
-
     "watch:ts": "bun build ./src/main.ts --outdir ./dist --target browser --format esm --watch",
 
     "serve": "bunx serve dist",
