@@ -1,8 +1,15 @@
 {
   "scripts": {
     "build:css": "tailwindcss -i ./src/index.css -o ./dist/index.css",
+    "watch:css": "tailwindcss -i ./src/index.css -o ./dist/index.css --watch",
+
     "build:ts": "bun build ./src/main.ts --outdir ./dist --target browser --format esm",
-    "build": "bun run build:ts && bun run build:css && cp index.html dist/index.html"
+
+    "watch:ts": "bun build ./src/main.ts --outdir ./dist --target browser --format esm --watch",
+
+    "serve": "bunx serve dist",
+
+    "dev": "concurrently \"bun run watch:ts\" \"bun run watch:css\" \"bun run serve\""
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",
